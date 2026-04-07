@@ -1,0 +1,224 @@
+tables:
+
+# =========================
+# CUSTOMER DOMAIN
+# =========================
+
+  customers:
+    primary_key: "customer_id"
+    columns:
+      customer_id: {type: "long"}
+      fname: {type: "string", alias: "first_name"}
+      lname: {type: "string", alias: "last_name"}
+      gender: {type: "string"}
+      email: {type: "string"}
+      phone: {type: "string"}
+      segment_id: {type: "long", cast_from: "double"}
+      city_id: {type: "long"}
+      status: {type: "string"}
+      created_at: {type: "timestamp", is_nano: true}
+
+  customer_addresses:
+    primary_key: "address_id"
+    columns:
+      address_id: {type: "long"}
+      customer_id: {type: "long"}
+      address_text: {type: "string"}
+
+  customer_behavior_metrics:
+    primary_key: "metric_id"
+    columns:
+      metric_id: {type: "long"}
+      customer_id: {type: "long"}
+      total_data_usage: {type: "decimal(15,4)", cast_from: "string"}
+      avg_monthly_spend: {type: "decimal(12,2)", cast_from: "string"}
+      last_activity_date: {type: "timestamp", is_nano: true}
+
+  customer_complaints:
+    primary_key: "complaint_id"
+    columns:
+      complaint_id: {type: "long"}
+      customer_id: {type: "long"}
+      description: {type: "string"}
+      status: {type: "string"}
+      created_at: {type: "timestamp", is_nano: true}
+
+  customer_nps_surveys:
+    primary_key: "survey_id"
+    columns:
+      survey_id: {type: "long"}
+      customer_id: {type: "long"}
+      score: {type: "long"}
+      feedback: {type: "string"}
+      created_at: {type: "timestamp", is_nano: true}
+
+# =========================
+# GEOGRAPHY
+# =========================
+
+  cities:
+    primary_key: "city_id"
+    columns:
+      city_id: {type: "long"}
+      city_name: {type: "string"}
+      country_id: {type: "long"}
+
+  countries:
+    primary_key: "country_id"
+    columns:
+      country_id: {type: "long"}
+      country_name: {type: "string"}
+      country_code: {type: "string"}
+
+# =========================
+# TELECOM DOMAIN
+# =========================
+
+  sim_cards:
+    primary_key: "sim_id"
+    columns:
+      sim_id: {type: "long"}
+      sim_number: {type: "string"}
+      status: {type: "string"}
+
+  phone_numbers:
+    primary_key: "phone_id"
+    columns:
+      phone_id: {type: "long"}
+      phone_number: {type: "string"}
+      sim_id: {type: "long"}
+
+  service_plans:
+    primary_key: "plan_id"
+    columns:
+      plan_id: {type: "long"}
+      plan_name: {type: "string"}
+      price: {type: "decimal(10,2)", cast_from: "string"}
+
+  plan_addons:
+    primary_key: "addon_id"
+    columns:
+      addon_id: {type: "long"}
+      addon_name: {type: "string"}
+      price: {type: "decimal(10,2)", cast_from: "string"}
+
+  subscriptions:
+    primary_key: "subscription_id"
+    columns:
+      subscription_id: {type: "long"}
+      customer_id: {type: "long"}
+      phone_id: {type: "long"}
+      plan_id: {type: "long"}
+      status: {type: "string"}
+      start_date: {type: "timestamp", is_nano: true}
+
+  subscription_addons:
+    primary_key: "id"
+    columns:
+      id: {type: "long"}
+      subscription_id: {type: "long"}
+      addon_id: {type: "long"}
+
+# =========================
+# USAGE FACTS
+# =========================
+
+  call_records:
+    primary_key: "call_id"
+    columns:
+      call_id: {type: "long"}
+      phone_id: {type: "long"}
+      duration: {type: "long"}
+      cost: {type: "decimal(10,2)", cast_from: "string"}
+      call_date: {type: "timestamp", is_nano: true}
+
+  data_sessions:
+    primary_key: "session_id"
+    columns:
+      session_id: {type: "long"}
+      phone_id: {type: "long"}
+      data_used: {type: "decimal(15,4)", cast_from: "string"}
+      session_date: {type: "timestamp", is_nano: true}
+
+  sms_records:
+    primary_key: "sms_id"
+    columns:
+      sms_id: {type: "long"}
+      phone_id: {type: "long"}
+      message_text: {type: "string"}
+      sent_date: {type: "timestamp", is_nano: true}
+
+# =========================
+# BILLING
+# =========================
+
+  invoices:
+    primary_key: "invoice_id"
+    columns:
+      invoice_id: {type: "long"}
+      customer_id: {type: "long"}
+      total_amount: {type: "decimal(12,2)", cast_from: "string"}
+      status: {type: "string"}
+      created_at: {type: "timestamp", is_nano: true}
+
+  invoice_line_items:
+    primary_key: "item_id"
+    columns:
+      item_id: {type: "long"}
+      invoice_id: {type: "long"}
+      description: {type: "string"}
+      amount: {type: "decimal(10,2)", cast_from: "string"}
+
+  payments:
+    primary_key: "payment_id"
+    columns:
+      payment_id: {type: "long"}
+      invoice_id: {type: "long"}
+      amount: {type: "decimal(12,2)", cast_from: "string"}
+      payment_date: {type: "timestamp", is_nano: true}
+
+  balance_transactions:
+    primary_key: "txn_id"
+    columns:
+      txn_id: {type: "long"}
+      phone_id: {type: "long"}
+      amount: {type: "decimal(12,2)", cast_from: "string"}
+      txn_date: {type: "timestamp", is_nano: true}
+
+# =========================
+# SALES
+# =========================
+
+  sales_channels:
+    primary_key: "channel_id"
+    columns:
+      channel_id: {type: "long"}
+      channel_name: {type: "string"}
+
+  sales_representatives:
+    primary_key: "rep_id"
+    columns:
+      rep_id: {type: "long"}
+      fname: {type: "string", alias: "first_name"}
+      lname: {type: "string", alias: "last_name"}
+      channel_id: {type: "long"}
+
+  sales_orders:
+    primary_key: "order_id"
+    columns:
+      order_id: {type: "long"}
+      customer_id: {type: "long"}
+      rep_id: {type: "long"}
+      channel_id: {type: "long"}
+      order_date: {type: "timestamp", is_nano: true}
+      total_amount: {type: "decimal(12,2)", cast_from: "string"}
+
+  sales_order_items:
+    primary_key: "item_id"
+    columns:
+      item_id: {type: "long"}
+      order_id: {type: "long"}
+      item_type: {type: "string"}
+      ref_id: {type: "long"}
+      quantity: {type: "long"}
+      price: {type: "decimal(10,2)", cast_from: "string"}

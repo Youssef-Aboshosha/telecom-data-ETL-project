@@ -1,11 +1,40 @@
-.git
-.env
+# --- OS & IDE ---
 .DS_Store
-airflow_settings.yaml
+.idea/
+.vscode/
+*.swp
+
+# --- Python ---
 __pycache__/
-astro
-.venv
+*.py[cod]
+*$py.class
+.venv/
+env/
+build/
+dist/
+
+# --- Astro & Airflow ---
+.astro/
+logs/
+temp/
 airflow-webserver.pid
 webserver_config.py
-airflow.cfg
-airflow.db
+unittests.cfg
+# We keep airflow_settings.yaml because it's often used for local connections
+# BUT we ignore the actual DB if using local sqlite
+*.db
+
+# --- DATA (CRITICAL) ---
+# This ensures your 35 Parquet files stay on your E: drive/local path
+data/
+include/data/
+*.parquet
+*.csv
+*.json
+
+# --- SECRETS ---
+.env
+.netrc
+credentials.json
+
+metrics/

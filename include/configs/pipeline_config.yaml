@@ -1,0 +1,93 @@
+tables:
+  # --- Incremental Tables (High Volume / Transactional) ---
+  call_records:
+    load_type: "INCREMENTAL"
+    watermark_col: "call_date"  # افترضت أسماء الأعمدة، عدلها لو مختلفة
+  data_sessions:
+    load_type: "INCREMENTAL"
+    watermark_col: "session_date"
+  sms_records:
+    load_type: "INCREMENTAL"
+    watermark_col: "sent_date"
+  balance_transactions:
+    load_type: "INCREMENTAL"
+    watermark_col: "txn_date"
+  payments:
+    load_type: "INCREMENTAL"
+    watermark_col: "payment_date"
+  invoices:
+    load_type: "INCREMENTAL"
+    watermark_col: "created_at"
+  invoice_line_items:
+    load_type: "INCREMENTAL"
+    watermark_col: "invoice_id" # أو عمود الـ ID لو معندكش تاريخ
+  sales_orders:
+    load_type: "INCREMENTAL"
+    watermark_col: "order_date"
+  sales_order_items:
+    load_type: "INCREMENTAL"
+    watermark_col: "order_id"
+  customer_complaints:
+    load_type: "INCREMENTAL"
+    watermark_col: "created_at"
+  customer_nps_surveys:
+    load_type: "INCREMENTAL"
+    watermark_col: "created_at"
+  network_kpis:
+    load_type: "INCREMENTAL"
+    watermark_col: "kpi_date"
+  network_incidents:
+    load_type: "INCREMENTAL"
+    watermark_col: "created_at"
+  sales_commissions:
+    load_type: "INCREMENTAL"
+    watermark_col: "commission_id"
+  churn_predictions: # غالباً دي بتتحسب يومياً، فنسحب الجديد بس
+    load_type: "INCREMENTAL"
+    watermark_col: "prediction_date"
+
+  # --- Mixed Mode (Customers & Subscriptions) ---
+  # دول بالرغم إنهم كبار (1M)، بس غالباً بنحتاجهم FULL في الـ Silver 
+  # عشان الـ SCD Type 2، بس في الـ Bronze هنسحبهم INCREMENTAL لو فيه "created_at"
+  customers:
+    load_type: "INCREMENTAL"
+    watermark_col: "created_at"
+  subscriptions:
+    load_type: "INCREMENTAL"
+    watermark_col: "start_date"
+  phone_numbers:
+    load_type: "INCREMENTAL"
+    watermark_col: "phone_id"
+  sim_cards:
+    load_type: "INCREMENTAL"
+    watermark_col: "sim_id"
+
+  # --- Full Load Tables (Reference / Metadata / Master Data) ---
+  countries:
+    load_type: "FULL"
+  cities:
+    load_type: "FULL"
+  branches:
+    load_type: "FULL"
+  departments:
+    load_type: "FULL"
+  employees:
+    load_type: "FULL"
+  plan_addons:
+    load_type: "FULL"
+  service_plans:
+    load_type: "FULL"
+  sales_channels:
+    load_type: "FULL"
+  customer_segments:
+    load_type: "FULL"
+  network_towers:
+    load_type: "FULL"
+  sales_representatives:
+    load_type: "FULL"
+  sales_targets:
+    load_type: "FULL"
+  
+  # الجداول الصفرية أو الـ System
+  sysdiagrams:
+    load_type: "FULL"

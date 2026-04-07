@@ -1,0 +1,13 @@
+services:
+  scheduler:
+    build: .
+    volumes:
+      - .:/usr/local/airflow
+  webserver:
+    build: .
+    volumes:
+      - .:/usr/local/airflow
+  triggerer:
+    build: .
+    volumes:
+      - .:/usr/local/airflow
