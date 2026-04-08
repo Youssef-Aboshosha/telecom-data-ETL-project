@@ -1,8 +1,10 @@
 import yaml
 import os
+import sys
 import re
 import time
 import logging
+import argparse
 
 from pyspark.sql import functions as F
 from pyspark.sql.types import *
@@ -281,10 +283,33 @@ def run_silver_layer():
 
     spark.stop()
 
+
     logger.info("✅ Silver Layer Completed")
 
 
+##
 # ---------------------------------------------------------
 
 if __name__ == "__main__":
-    run_silver_layer()
+    parser = argparse.ArgumentParser(description="Run Silver Layer Transformations")
+    parser.add_argument("--table", help="Specific table to process")
+    args = parser.parse_args()
+
+    if args.table:
+        logger.info(f"🎯 Targeted Run: {args.table}")
+        # استخدام try-finally لضمان إغلاق الـ Spark Session حتى لو حصل فشل
+        spark_session = get_spark_session(f"Silver_Transform_{args.table}")
+        try:
+            full_config = load_schema_config()
+            if args.table in full_config["tables"]:
+                transform_table(spark_session, args.table, full_config["tables"][args.table])
+            else:
+                logger.error(f"❌ Table '{args.table}' not found in schemas.yaml")
+                sys.exit(1)
+        except Exception as e:
+            logger.error(f"❌ Failed to process {args.table}: {str(e)}", exc_info=True)
+            sys.exit(1)
+        finally:
+            spark_session.stop()
+    else:
+        run_silver_layer()
