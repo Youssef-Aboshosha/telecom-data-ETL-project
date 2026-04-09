@@ -1,117 +1,255 @@
 # 🚀 Telecom Data Platform: End-to-End Medallion Architecture
 
-## The Ultimate Galaxy Schema Data Pipeline
-Built with PySpark, Delta Lake, Airflow, Docker, Snowflake, and Power BI 🌐🏢📊
+### The Ultimate Galaxy Schema Data Pipeline
+
+Built with **PySpark, Delta Lake, Airflow, Docker, Snowflake, and Power BI** ⚡🧊💨🐳❄️📈
 
 ---
 
-# 🏗️ Architecture Overview
-
-This project implements a **production-ready Medallion Architecture (Bronze → Silver → Gold)** to process **15+ million telecom records**.
-
-The pipeline transforms raw transactional telecom data into a **highly optimized Galaxy Schema** designed for **executive analytics and predictive modeling**.
-
-##  System Architecture
+# 🏗️ System Architecture
 
 ![Architecture Diagram](assets/architecture.png)
 
-The pipeline follows a Medallion architecture:
+This project implements a **production-grade Data Engineering pipeline** using the **Medallion Architecture (Bronze → Silver → Gold)** to process **15+ million telecom records**.
 
-Raw Sources → Bronze → Silver → Gold → Snowflake → Power BI
+The pipeline transforms raw telecom transaction logs into a **highly optimized analytical Galaxy Schema** designed for **executive analytics and predictive modeling**.
 
 ### Data Flow
 
-Raw Sources → Bronze → Silver → Gold → Snowflake → Power BI
+Raw Sources
+↓
+Bronze Layer (Delta Lake)
+↓
+Silver Layer (Cleaned & Validated Data)
+↓
+Gold Layer (Galaxy Schema Warehouse)
+↓
+Snowflake Data Warehouse
+↓
+Power BI Dashboards
 
-**Raw Layer**
-- Ingestion of disparate sources into **Parquet and CSV**
+---
 
-**Bronze Layer**
-- Raw ingestion into **Delta Lake**
-- Ensures **ACID compliance and auditability**
+# 💡 Key Skills Demonstrated
 
-**Silver Layer**
-- Data cleaning
-- Schema enforcement
-- Deduplication
-
-**Gold Layer**
-- Business modeling using a **Galaxy Schema**
-- SCD Type 2 dimensions
-- Partitioning & Z-Ordering
-
-**Warehouse & BI**
-- Gold data pushed automatically to **Snowflake**
-- Consumed by **Power BI dashboards**
+* Medallion Architecture Design
+* PySpark Distributed Data Processing
+* Delta Lake Optimization
+* Slowly Changing Dimensions (SCD Type 2)
+* Data Warehouse Modeling (Galaxy Schema)
+* Apache Airflow Workflow Orchestration
+* Docker Containerized Data Platforms
+* Snowflake Data Warehouse Integration
+* Business Intelligence with Power BI
+* Data Quality & Reconciliation Engineering
 
 ---
 
 # 🛠️ Tech Stack
 
-| Layer | Technology |
-|-----|------|
-| Processing | PySpark (Apache Spark 3.5) ⚡ |
-| Storage | Delta Lake & Parquet 🧊 |
-| Orchestration | Apache Airflow 💨 |
-| Containerization | Docker 🐳 |
-| Data Warehouse | Snowflake ❄️ |
-| Visualization | Power BI 📈 |
-| Language | Python 🐍 |
-| Environment | Astronomer Astro CLI 🚀 |
+| Layer             | Technology                        |
+| ----------------- | --------------------------------- |
+| Processing Engine | PySpark (Apache Spark 3.5) ⚡      |
+| Data Storage      | Delta Lake & Parquet 🧊           |
+| Orchestration     | Apache Airflow (Astro Runtime) 💨 |
+| Containerization  | Docker 🐳                         |
+| Data Warehouse    | Snowflake ❄️                      |
+| Visualization     | Power BI 📈                       |
+| Programming       | Python 🐍                         |
+| Environment       | Astronomer Astro CLI 🚀           |
 
 ---
 
-# 📊 Data Modeling – Galaxy Schema
+# 📦 Dataset Characteristics
 
-Unlike a traditional **Star Schema**, this platform implements a **Galaxy Schema**.
+Total Records Processed: **15+ Million**
 
-Multiple **Fact Tables** share **Conformed Dimensions**, providing a **360° view of telecom operations**.
+The platform ingests multiple telecom data sources:
+
+* Call Detail Records (CDR)
+* SMS Transaction Logs
+* Mobile Data Sessions
+* Customer Billing & Payments
+* Sales Transactions
+* Customer Support Complaints
+* Churn Prediction Scores
+
+This dataset supports **operational analytics, financial insights, and customer experience analysis**.
 
 ---
 
-# 🧩 Dimensions
+# 🧱 Medallion Data Architecture
+
+## 🟤 Bronze Layer — Raw Data
+
+Purpose: **Raw immutable ingestion**
+
+Features:
+
+* Source data stored in **Delta Lake format**
+* Schema-on-read ingestion
+* Full raw audit history
+* ACID transaction support
+
+Input formats include:
+
+* CSV
+* Parquet
+* JSON logs
+
+---
+
+## ⚪ Silver Layer — Cleaned Data
+
+Purpose: **Data quality enforcement**
+
+Processing steps include:
+
+* Schema validation
+* Deduplication
+* Null handling
+* Data type standardization
+* Referential integrity checks
+
+This layer produces **trusted datasets ready for analytics modeling**.
+
+---
+
+## 🟡 Gold Layer — Business Warehouse
+
+Purpose: **Business-ready analytics layer**
+
+The Gold layer implements a **Galaxy Schema** optimized for analytical workloads.
+
+Key features:
+
+* SCD Type 2 dimensions
+* Partitioned fact tables
+* Z-Ordering optimization
+* Surrogate keys
+* High-performance joins
+
+Gold tables are automatically synchronized to **Snowflake** for BI consumption.
+
+---
+
+# 📊 Data Modeling — Galaxy Schema
+
+Unlike a simple **Star Schema**, this project implements a **Galaxy Schema** where multiple fact tables share conformed dimensions.
+
+![Galaxy Schema](assets/galaxy_schema.png)
+
+This design enables a **360-degree view of telecom operations**.
+
+---
+
+# 🧩 Dimension Tables
 
 ### dim_customer (SCD Type 2)
-Tracks historical customer changes using **SHA2 hash change detection**.
+
+Tracks customer profile history using **SHA2 hash change detection**.
+
+Features:
+
+* Surrogate keys
+* Effective start/end dates
+* Historical tracking
+* Change detection
+
+---
 
 ### dim_plan_catalog
-Unified catalog for telecom **plans and add-ons**.
+
+Unified catalog of telecom offerings:
+
+* Mobile plans
+* Data add-ons
+* SMS bundles
+* Roaming packages
+
+---
 
 ### dim_geography
-Denormalized **city → country hierarchy**.
+
+Denormalized hierarchy:
+
+City → Region → Country
+
+Supports regional analytics and network ROI analysis.
+
+---
 
 ### dim_phone
-Maps **SIM / IMEI devices to customer subscriptions**.
+
+Links **physical telecom assets to customer subscriptions**.
+
+Tracks:
+
+* SIM
+* IMEI
+* Device ownership
+
+---
 
 ### dim_date
-Industry standard **date dimension with unknown record logic**.
+
+Industry-standard date dimension including:
+
+* Year
+* Quarter
+* Month
+* Week
+* Day
+* Unknown date record
 
 ---
 
 # 📈 Fact Tables
 
 ### fact_usage
-12M+ telecom usage records:
-- Calls
-- SMS
-- Data
+
+12M+ telecom activity records including:
+
+* Calls
+* SMS
+* Data sessions
+
+Metrics:
+
+* Call duration
+* Data consumption
+* SMS volume
+
+---
 
 ### fact_financials
-Billing audit:
-- Invoices
-- Payments
-- Revenue
+
+Financial auditing layer tracking:
+
+* Invoice amounts
+* Payments
+* Revenue streams
+* Outstanding balances
+
+---
 
 ### fact_sales
-Sales performance tracking:
-- Plan purchases
-- Revenue by region
+
+Sales analytics including:
+
+* Plan purchases
+* Customer acquisitions
+* Regional sales performance
+
+---
 
 ### fact_customer_experience
-Customer sentiment:
-- NPS
-- Complaints
-- Churn prediction
+
+Customer sentiment analytics:
+
+* NPS scores
+* Complaint frequency
+* Churn prediction probabilities
 
 ---
 
@@ -119,124 +257,206 @@ Customer sentiment:
 
 ## 1️⃣ Data Reconciliation — The $2× Revenue Bug
 
-**Problem**
+During development, a major issue appeared:
 
-Gold layer revenue was **double the Silver layer revenue**.
+Gold revenue was **double the Silver revenue**.
 
-**Root Cause**
+### Root Cause
 
-Duplicate records in `dim_customer` caused **Cartesian joins**.
+Duplicate records in `dim_customer` caused **Cartesian joins**, inflating revenue metrics.
 
-**Solution**
+### Solution
 
 Implemented strict uniqueness validation:
 
-dropDuplicates(["customer_id"])
+df = df.dropDuplicates(["customer_id"])
 
-Added a reconciliation script ensuring **0% variance between layers**.
+Then created a reconciliation validation script ensuring:
+
+Gold Revenue = Silver Revenue
+Variance = 0%
+
+This ensured **financial reporting accuracy**.
 
 ---
 
 ## 2️⃣ Performance Optimization
 
-Processing **15M+ records inside Docker** required aggressive tuning.
+Processing **15M+ records in Docker containers** required optimization.
 
 ### Z-Ordering
+
 Applied on:
 
-- `customer_sk`
-- `date_key`
-
-Improves query pruning and join performance.
-
-### Partitioning
-
-Partitioned by:
-year / month
-
+* customer_sk
+* date_key
 
 Benefits:
 
-- Faster Power BI queries
-- Reduced Snowflake credit usage
+* Faster joins
+* Query pruning
+* Reduced scan times
 
 ---
 
-## 3️⃣ Automated Snowflake Sync
+### Partitioning Strategy
 
-Gold tables automatically **push to Snowflake** using the connector.
+Fact tables partitioned by:
 
-This ensures **real-time availability for dashboards**.
+* year
+* month
+
+Benefits:
+
+* Faster Power BI queries
+* Reduced Snowflake compute cost
+* Efficient data pruning
 
 ---
 
-# ⚙️ Pipeline Orchestration (Airflow)
+## 3️⃣ Automated Snowflake Synchronization
 
-A **Master DAG** orchestrates the pipeline.
+Gold tables are automatically **pushed to Snowflake**, enabling:
 
-Execution Flow:
+* Immediate BI availability
+* Centralized analytics warehouse
+* Scalable reporting infrastructure
 
-Raw Ingestion
+---
+
+# ⚙️ Pipeline Orchestration (Apache Airflow)
+
+The pipeline is orchestrated by a **Master DAG**.
+
+Execution flow:
+
+Raw Data Ingestion
 ↓
-Bronze + Silver Processing
+Bronze & Silver Processing
 ↓
 Base Dimensions
-(Date, Geography, Plans)
+(Date, Geography, Plan Catalog)
 ↓
-SCD Dimensions
-(Customer, Phone)
+Complex Dimensions
+(Customer SCD Type 2, Phone)
 ↓
 Fact Tables
-(Usage, Sales, Financials, CX)
+(Usage, Sales, Financials, Customer Experience)
+↓
+Snowflake Warehouse Sync
 
-
-The DAG is **idempotent and dependency-driven**.
+The DAG is **idempotent**, meaning it can safely re-run without duplicating data.
 
 ---
 
-# 📈 Business Insights (Power BI)
+# 📈 Business Intelligence (Power BI)
 
-The Gold layer powers executive dashboards:
+The Gold layer powers executive dashboards.
 
-### ARPU
-Average Revenue Per User
+![Power BI Dashboard](assets/dashboard.png)
 
-### Churn Risk
-Customers with high complaint frequency + churn probability.
+Key analytics include:
 
-### Network ROI
-Comparing **usage volume vs revenue per region**.
+### 📊 ARPU
+
+Average Revenue Per User.
+
+### ⚠️ Churn Risk
+
+Identifies customers with:
+
+* High complaint frequency
+* High churn probability
+
+### 🌍 Network ROI
+
+Compares **usage volume vs revenue per region**.
+
+---
+
+# 📂 Project Structure
+
+telecom-data-ETL-project
+│
+├── dags/
+│   └── telecom_gold_layer_master.py
+│
+├── include/
+│   ├── transformations/
+│   │     bronze_layer.py
+│   │     silver_layer.py
+│   │     gold_layer.py
+│   │
+│   └── data/
+│         delta_tables/
+│
+├── assets/
+│   architecture.png
+│   galaxy_schema.png
+│   dashboard.png
+│
+├── Dockerfile
+├── requirements.txt
+├── airflow_settings.yaml
+└── README.md
 
 ---
 
 # ▶️ Running the Project Locally
 
-Requirements:
+### Prerequisites
 
-- Docker
-- Astronomer CLI
+* Docker
+* Astronomer CLI
 
-Clone the repository:
+---
 
-git clone <repo>
+### Clone the Repository
 
-Start the platform:
+git clone https://github.com/Youssef-Aboshosha/telecom-data-ETL-project.git
+
+---
+
+### Start the Platform
+
 astro dev start
 
-Open Airflow:
+---
+
+### Open Airflow UI
+
 http://localhost:8080
 
+---
+
+### Run the Pipeline
 
 Trigger the DAG:
+
 telecom_gold_layer_master
 
+This executes the full **Bronze → Silver → Gold pipeline**.
 
 ---
 
 # 👨‍💻 Author
 
-**Youssef [Last Name]**
+**Youssef Aboshosha**
 
-LinkedIn: [Link]  
-Portfolio: [Link]  
-GitHub: [Link]
+LinkedIn: *(Add your link)*
+Portfolio: *(Add your link)*
+GitHub: https://github.com/Youssef-Aboshosha
+
+---
+
+# ⭐ Project Summary
+
+This project demonstrates a **production-grade data engineering system** combining:
+
+* Lakehouse architecture
+* Distributed Spark processing
+* Automated workflow orchestration
+* Enterprise data warehousing
+* Business intelligence dashboards
+
+The result is a **fully automated telecom analytics platform capable of processing millions of records efficiently**.
