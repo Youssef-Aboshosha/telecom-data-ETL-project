@@ -1,45 +1,234 @@
-Overview
-========
+# 🚀 Telecom Data Platform: End-to-End Medallion Architecture
 
-Welcome to Astronomer! This project was generated after you ran 'astro dev init' using the Astronomer CLI. This readme describes the contents of the project, as well as how to run Apache Airflow on your local machine.
+## The Ultimate Galaxy Schema Data Pipeline
+Built with PySpark, Delta Lake, Airflow, Docker, Snowflake, and Power BI 🌐🏢📊
 
-Project Contents
-================
+---
 
-Your Astro project contains the following files and folders:
+# 🏗️ Architecture Overview
 
-- dags: This folder contains the Python files for your Airflow DAGs. By default, this directory includes one example DAG:
-    - `example_astronauts`: This DAG shows a simple ETL pipeline example that queries the list of astronauts currently in space from the Open Notify API and prints a statement for each astronaut. The DAG uses the TaskFlow API to define tasks in Python, and dynamic task mapping to dynamically print a statement for each astronaut. For more on how this DAG works, see our [Getting started tutorial](https://www.astronomer.io/docs/learn/get-started-with-airflow).
-- Dockerfile: This file contains a versioned Astro Runtime Docker image that provides a differentiated Airflow experience. If you want to execute other commands or overrides at runtime, specify them here.
-- include: This folder contains any additional files that you want to include as part of your project. It is empty by default.
-- packages.txt: Install OS-level packages needed for your project by adding them to this file. It is empty by default.
-- requirements.txt: Install Python packages needed for your project by adding them to this file. It is empty by default.
-- plugins: Add custom or community plugins for your project to this file. It is empty by default.
-- airflow_settings.yaml: Use this local-only file to specify Airflow Connections, Variables, and Pools instead of entering them in the Airflow UI as you develop DAGs in this project.
+This project implements a **production-ready Medallion Architecture (Bronze → Silver → Gold)** to process **15+ million telecom records**.
 
-Deploy Your Project Locally
-===========================
+The pipeline transforms raw transactional telecom data into a **highly optimized Galaxy Schema** designed for **executive analytics and predictive modeling**.
 
-Start Airflow on your local machine by running 'astro dev start'.
+### Data Flow
 
-This command will spin up five Docker containers on your machine, each for a different Airflow component:
+Raw Sources → Bronze → Silver → Gold → Snowflake → Power BI
 
-- Postgres: Airflow's Metadata Database
-- Scheduler: The Airflow component responsible for monitoring and triggering tasks
-- DAG Processor: The Airflow component responsible for parsing DAGs
-- API Server: The Airflow component responsible for serving the Airflow UI and API
-- Triggerer: The Airflow component responsible for triggering deferred tasks
+**Raw Layer**
+- Ingestion of disparate sources into **Parquet and CSV**
 
-When all five containers are ready the command will open the browser to the Airflow UI at http://localhost:8080/. You should also be able to access your Postgres Database at 'localhost:5432/postgres' with username 'postgres' and password 'postgres'.
+**Bronze Layer**
+- Raw ingestion into **Delta Lake**
+- Ensures **ACID compliance and auditability**
 
-Note: If you already have either of the above ports allocated, you can either [stop your existing Docker containers or change the port](https://www.astronomer.io/docs/astro/cli/troubleshoot-locally#ports-are-not-available-for-my-local-airflow-webserver).
+**Silver Layer**
+- Data cleaning
+- Schema enforcement
+- Deduplication
 
-Deploy Your Project to Astronomer
-=================================
+**Gold Layer**
+- Business modeling using a **Galaxy Schema**
+- SCD Type 2 dimensions
+- Partitioning & Z-Ordering
 
-If you have an Astronomer account, pushing code to a Deployment on Astronomer is simple. For deploying instructions, refer to Astronomer documentation: https://www.astronomer.io/docs/astro/deploy-code/
+**Warehouse & BI**
+- Gold data pushed automatically to **Snowflake**
+- Consumed by **Power BI dashboards**
 
-Contact
-=======
+---
 
-The Astronomer CLI is maintained with love by the Astronomer team. To report a bug or suggest a change, reach out to our support.
+# 🛠️ Tech Stack
+
+| Layer | Technology |
+|-----|------|
+| Processing | PySpark (Apache Spark 3.5) ⚡ |
+| Storage | Delta Lake & Parquet 🧊 |
+| Orchestration | Apache Airflow 💨 |
+| Containerization | Docker 🐳 |
+| Data Warehouse | Snowflake ❄️ |
+| Visualization | Power BI 📈 |
+| Language | Python 🐍 |
+| Environment | Astronomer Astro CLI 🚀 |
+
+---
+
+# 📊 Data Modeling – Galaxy Schema
+
+Unlike a traditional **Star Schema**, this platform implements a **Galaxy Schema**.
+
+Multiple **Fact Tables** share **Conformed Dimensions**, providing a **360° view of telecom operations**.
+
+---
+
+# 🧩 Dimensions
+
+### dim_customer (SCD Type 2)
+Tracks historical customer changes using **SHA2 hash change detection**.
+
+### dim_plan_catalog
+Unified catalog for telecom **plans and add-ons**.
+
+### dim_geography
+Denormalized **city → country hierarchy**.
+
+### dim_phone
+Maps **SIM / IMEI devices to customer subscriptions**.
+
+### dim_date
+Industry standard **date dimension with unknown record logic**.
+
+---
+
+# 📈 Fact Tables
+
+### fact_usage
+12M+ telecom usage records:
+- Calls
+- SMS
+- Data
+
+### fact_financials
+Billing audit:
+- Invoices
+- Payments
+- Revenue
+
+### fact_sales
+Sales performance tracking:
+- Plan purchases
+- Revenue by region
+
+### fact_customer_experience
+Customer sentiment:
+- NPS
+- Complaints
+- Churn prediction
+
+---
+
+# 🚀 Engineering Challenges & Solutions
+
+## 1️⃣ Data Reconciliation — The $2× Revenue Bug
+
+**Problem**
+
+Gold layer revenue was **double the Silver layer revenue**.
+
+**Root Cause**
+
+Duplicate records in `dim_customer` caused **Cartesian joins**.
+
+**Solution**
+
+Implemented strict uniqueness validation:
+
+dropDuplicates(["customer_id"])
+
+Added a reconciliation script ensuring **0% variance between layers**.
+
+---
+
+## 2️⃣ Performance Optimization
+
+Processing **15M+ records inside Docker** required aggressive tuning.
+
+### Z-Ordering
+Applied on:
+
+- `customer_sk`
+- `date_key`
+
+Improves query pruning and join performance.
+
+### Partitioning
+
+Partitioned by:
+year / month
+
+
+Benefits:
+
+- Faster Power BI queries
+- Reduced Snowflake credit usage
+
+---
+
+## 3️⃣ Automated Snowflake Sync
+
+Gold tables automatically **push to Snowflake** using the connector.
+
+This ensures **real-time availability for dashboards**.
+
+---
+
+# ⚙️ Pipeline Orchestration (Airflow)
+
+A **Master DAG** orchestrates the pipeline.
+
+Execution Flow:
+
+Raw Ingestion
+↓
+Bronze + Silver Processing
+↓
+Base Dimensions
+(Date, Geography, Plans)
+↓
+SCD Dimensions
+(Customer, Phone)
+↓
+Fact Tables
+(Usage, Sales, Financials, CX)
+
+
+The DAG is **idempotent and dependency-driven**.
+
+---
+
+# 📈 Business Insights (Power BI)
+
+The Gold layer powers executive dashboards:
+
+### ARPU
+Average Revenue Per User
+
+### Churn Risk
+Customers with high complaint frequency + churn probability.
+
+### Network ROI
+Comparing **usage volume vs revenue per region**.
+
+---
+
+# ▶️ Running the Project Locally
+
+Requirements:
+
+- Docker
+- Astronomer CLI
+
+Clone the repository:
+
+git clone <repo>
+
+Start the platform:
+astro dev start
+
+Open Airflow:
+http://localhost:8080
+
+
+Trigger the DAG:
+telecom_gold_layer_master
+
+
+---
+
+# 👨‍💻 Author
+
+**Youssef [Last Name]**
+
+LinkedIn: [Link]  
+Portfolio: [Link]  
+GitHub: [Link]
