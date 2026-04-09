@@ -1,8 +1,12 @@
 tables:
-
-# =========================
-# CUSTOMER DOMAIN
-# =========================
+  # =========================
+  # CUSTOMER DOMAIN
+  # =========================
+  customer_segments:
+    primary_key: "segment_id"
+    columns:
+      segment_id: {type: "long"}
+      segment_name: {type: "string"}
 
   customers:
     primary_key: "customer_id"
@@ -24,6 +28,8 @@ tables:
       address_id: {type: "long"}
       customer_id: {type: "long"}
       address_text: {type: "string"}
+
+# باقي الجداول (Behavior Metrics, Complaints, Surveys) تفضل كما هي...
 
   customer_behavior_metrics:
     primary_key: "metric_id"
