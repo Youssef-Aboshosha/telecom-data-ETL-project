@@ -11,6 +11,14 @@ This project implements a **production-ready Medallion Architecture (Bronze → 
 
 The pipeline transforms raw transactional telecom data into a **highly optimized Galaxy Schema** designed for **executive analytics and predictive modeling**.
 
+##  System Architecture
+
+![Architecture Diagram](assets/architecture.png)
+
+The pipeline follows a Medallion architecture:
+
+Raw Sources → Bronze → Silver → Gold → Snowflake → Power BI
+
 ### Data Flow
 
 Raw Sources → Bronze → Silver → Gold → Snowflake → Power BI
